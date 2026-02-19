@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="INotesV2.Api/INotesV2.Api.csproj" />
+  <Project Path="INotesV2.Application/INotesV2.Application.csproj" />
+  <Project Path="INotesV2.Client/INotesV2.Client.csproj" />
+  <Project Path="INotesV2.Domain/INotesV2.Domain.csproj" />
+  <Project Path="INotesV2.Infrastructure/INotesV2.Infrastructure.csproj" />
+</Solution>
