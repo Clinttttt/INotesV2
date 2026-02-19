@@ -29,7 +29,7 @@ namespace INotesV2.Api.Shared
         protected Guid UserId => UserIdOrNull ?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
 
-        public ActionResult<Result<T>> HandleResponse<T>(Result<T> result, string? message = null)
+        protected ActionResult HandleResponse<T>(Result<T> result, string? message = null)
         {
             if(result.status_code == 200)
             {

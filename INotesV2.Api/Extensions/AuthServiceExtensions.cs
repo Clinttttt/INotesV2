@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 
-namespace INotesV2.Api
+namespace INotesV2.Api.Extensions
 {
-    public static class Startup
+    public static class AuthServiceExtensions
     {
         public static void ConfigureAuthServices(this WebApplicationBuilder builder)
         {
@@ -32,7 +32,6 @@ namespace INotesV2.Api
 
 
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)),
-                        RoleClaimType = ClaimTypes.Role,
                         NameClaimType = ClaimTypes.Name,
                     };
 

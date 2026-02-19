@@ -2,6 +2,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using INotesV2.Infrastructure;
 using INotesV2.Application;
 using INotesV2.Api;
+using INotesV2.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureAuthServices();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddApi();
+builder.Services.AddApi(builder.Configuration);
 
 
 

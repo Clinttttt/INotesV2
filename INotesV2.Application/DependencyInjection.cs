@@ -24,8 +24,6 @@ namespace INotesV2.Application
                 cfg.AddProfile<AutomapperProfile>();
             });
 
-
-
             return services;
         }
     }
