@@ -1,4 +1,6 @@
-﻿using INotesV2.Application.Dtos.Note;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using INotesV2.Application.Dtos.Note;
 using INotesV2.Application.Extensions;
 using INotesV2.Application.Interfaces.Repositories;
 using INotesV2.Application.Models;
@@ -14,8 +16,9 @@ using System.Transactions;
 
 namespace INotesV2.Infrastructure.Respository
 {
-    public class NoteRespository(IAppDbContext context) : INoteRespository
+    public class NoteRespository(IAppDbContext context, IMapper mapper) : INoteRespository
     {
+
 
         public async Task<Result<Guid>> Create(CreateNoteDto request, CancellationToken cancellationToken = default)
         {
@@ -33,9 +36,10 @@ namespace INotesV2.Infrastructure.Respository
             await context.SaveChangesAsync(cancellationToken);
             return Result<Guid>.Success(note.Id);
         }
+
         public async Task<Result<UpdateNoteDto>> Update(UpdateNoteDto request, CancellationToken cancellationToken = default)
         {
-            var find_note = await context.notes.FirstOrDefaultAsync(s => s.Id == request.note_id);
+            var find_note = await context.notes.FirstOrDefaultAsync(s => s.Id == request.note_id && s.user_id == request.user_id);
             if (find_note is null) return Result<UpdateNoteDto>.NotFound();
 
             find_note.title = request.title;
@@ -43,51 +47,28 @@ namespace INotesV2.Infrastructure.Respository
             find_note.updated_at = DateTime.UtcNow;
 
             await context.SaveChangesAsync(cancellationToken);
-            return Result<UpdateNoteDto>.Success(request);
+            var dto = mapper.Map<UpdateNoteDto>(find_note);
+            return Result<UpdateNoteDto>.Success(dto);
         }
-        public async Task<Result<NoteDto>> Get(Guid note_id, CancellationToken cancellationToken = default)
+        public async Task<Result<NoteDto>> Get(Guid note_id,Guid user_id, CancellationToken cancellationToken = default)
         {
-            var find_note = await context.notes.AsNoTracking().FirstOrDefaultAsync(s => s.Id == note_id, cancellationToken);
+            var find_note = await context.notes.AsNoTracking().FirstOrDefaultAsync(s => s.Id == note_id && s.user_id == user_id, cancellationToken);
             if (find_note is null) return Result<NoteDto>.NotFound();
-            var note_dto = new NoteDto
-            {
-                Id = find_note.Id,
-                user_id = find_note.user_id,
-                title = find_note.title,
-                content = find_note.content,
-                created_at = find_note.created_at,
-                is_archived = find_note.is_archived,
-                is_pinned = find_note.is_pinned
-            };
+            var note_dto = mapper.Map<NoteDto>(find_note);
             return Result<NoteDto>.Success(note_dto);
         }
-        public async Task<Result<CursorPagedResult<NoteListDto>>> GetListing(Guid user_id, CursorQueryParams params_query, CancellationToken cancellationToken = default)
+        public async Task<CursorPagedResult<NoteDto>> GetListing(Guid userId, DateTime? cursor, int pageSize, CancellationToken cancellationToken = default)
         {
-
-            var query = context.notes.AsNoTracking().Where(s => s.user_id == user_id);
-
-            if (params_query.Cursor.HasValue)
-            {
-                query = query.Where(s => s.created_at < params_query.Cursor.Value);
-            }
-
-            var result = await query.OrderByDescending(s => s.created_at)
-                .Take(params_query.PageSize)
-                .Select(s => new NoteListDto
-                {
-                    note_id = s.Id,
-                    user_id = s.user_id,
-                    title = s.title,
-                    content = s.content
-                })
-                .ToCursorPagedResult(params_query.PageSize, s => s.created_at, cancellationToken);
-            return Result<CursorPagedResult<NoteListDto>>.Success(result);
+            var query = context.notes.Where(n => n.user_id == userId && !n.is_archived).OrderBy(n => n.created_at).AsQueryable();
+            if (cursor.HasValue) query = query.Where(n => n.created_at > cursor.Value);
+            var queryDto = query.ProjectTo<NoteDto>(mapper.ConfigurationProvider);
+            return await queryDto.ToCursorPagedResult(pageSize, n => n.created_at, cancellationToken);
         }
 
-        public async Task<Result<bool>> Delete(Guid note_id, CancellationToken cancellationToken = default)
+        public async Task<Result<bool>> Delete(Guid note_id, Guid user_id, CancellationToken cancellationToken = default)
         {
-            var find_note = await context.notes.FirstOrDefaultAsync(s => s.Id == note_id);
-            if (find_note is null) return Result<bool>.NotFound();
+            var find_note = await context.notes.FirstOrDefaultAsync(s => s.Id == note_id && s.user_id == user_id);
+            if (find_note is null) return Result<bool>.NoContent();
             context.notes.Remove(find_note);
             await context.SaveChangesAsync(cancellationToken);
             return Result<bool>.Success(true);

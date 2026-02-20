@@ -63,7 +63,7 @@ namespace INotesV2.Infrastructure.Services
                     await context.SaveChangesAsync(cancellationToken);
                 }
 
-                var token = await tokenService.CreateTokenResponse(user);
+                var token = await tokenService.CreateTokenResponse(user,cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return token;
             }

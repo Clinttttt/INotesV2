@@ -3,6 +3,7 @@ using INotesV2.Infrastructure;
 using INotesV2.Application;
 using INotesV2.Api;
 using INotesV2.Api.Extensions;
+using INotesV2.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +26,13 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseCors("AllowBlazor");
 
 app.UseAuthentication();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

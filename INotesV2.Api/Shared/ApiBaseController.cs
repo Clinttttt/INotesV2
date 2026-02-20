@@ -11,14 +11,14 @@ namespace INotesV2.Api.Shared
     public abstract class ApiBaseController : ControllerBase
     {
 
-        public readonly ISender _sender;
+        public readonly ISender sender;
         public ApiBaseController(ISender sender)
         {
-            _sender = sender;
+            this.sender = sender;
         }   
-        protected ISender Sender => _sender;
+        protected ISender Sender => sender;
 
-        protected Guid? UserIdOrNull
+        protected Guid? opt_user_id
         {
             get
             {
@@ -26,7 +26,7 @@ namespace INotesV2.Api.Shared
                 return Guid.TryParse(user_id, out var id) ? id : null;
             } 
         }
-        protected Guid UserId => UserIdOrNull ?? throw new UnauthorizedAccessException("User ID not found in claims.");
+        protected Guid user_id => opt_user_id ?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
 
         protected ActionResult HandleResponse<T>(Result<T> result, string? message = null)

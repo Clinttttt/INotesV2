@@ -13,8 +13,8 @@ namespace INotesV2.Application.Interfaces.Repositories
     {
         Task<Result<Guid>> Create(CreateNoteDto request, CancellationToken cancellationToken = default);
         Task<Result<UpdateNoteDto>> Update(UpdateNoteDto request, CancellationToken cancellationToken = default);
-        Task<Result<NoteDto>> Get(Guid note_id, CancellationToken cancellationToken = default);
-        Task<Result<CursorPagedResult<NoteListDto>>> GetListing(Guid user_id, CursorQueryParams params_query, CancellationToken cancellationToken = default);
-        Task<Result<bool>> Delete(Guid note_id, CancellationToken cancellationToken = default);
+        Task<Result<NoteDto>> Get(Guid note_id, Guid user_id, CancellationToken cancellationToken = default);
+        Task<CursorPagedResult<NoteDto>> GetListing(Guid userId, DateTime? cursor, int pageSize, CancellationToken cancellationToken = default);
+        Task<Result<bool>> Delete(Guid note_id, Guid user_id, CancellationToken cancellationToken = default);
     }
 }

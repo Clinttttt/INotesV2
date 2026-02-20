@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using INotesV2.Application.Dtos.Note;
+using INotesV2.Application.Dtos.Tag;
+using INotesV2.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,9 @@ namespace INotesV2.Application
     {
         public AutomapperProfile()
         {
-            
+            CreateMap<Note, NoteDto>();
+            CreateMap<Note, UpdateNoteDto>();
+            CreateMap<Tag, TagDto>();
         }
     }
 }

@@ -29,7 +29,9 @@ namespace INotesV2.Infrastructure
             services.AddScoped<ITokenService, TokenService>();
             services.AddHttpClient<IGoogleTokenValidator, GoogleTokenValidator>();
             services.AddScoped<IAuthService, AuthService>();
+
             services.AddScoped<INoteRespository, NoteRespository>();
+            services.AddScoped<ITagRespository, TagRespository>();
 
             return services;
         }

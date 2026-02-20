@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace INotesV2.Domain.Entities
+namespace INotesV2.Application.Dtos.Tag
 {
-    public class Tag
+    public class CreateTagDto
     {
-        public Guid Id { get; set; }
         public Guid user_id { get; set; }
         public string? name { get; set; }
-        public DateTime created_at { get; set; }
-        public DateTime updated_at { get; set; }
-
+        
     }
 }

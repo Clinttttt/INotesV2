@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace INotesV2.Application.Queries.Note.GetListingNote
 {
-    public record GetListingNoteQuery(Guid user_id, DateTime? Cursor, int PageSize = 20) : IRequest<Result<CursorPagedResult<NoteListDto>>>;
-  
+    public class GetListingNoteQuery : IRequest<Result<CursorPagedResult<NoteDto>>>
+    {
+        public Guid UserId { get; set; }
+        public DateTime? Cursor { get; set; }
+        public int PageSize { get; set; } = 20;
+    }
+
 }

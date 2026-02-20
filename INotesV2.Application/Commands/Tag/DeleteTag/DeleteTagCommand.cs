@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace INotesV2.Application.Commands.Note.DeleteNote
+namespace INotesV2.Application.Commands.Tag.DeleteTag
 {
-    public record DeleteNoteCommand(Guid note_id, Guid user_id) : IRequest<Result<bool>>;
+    public record DeleteTagCommand(Guid user_id, Guid tag_id) : IRequest<Result<bool>>;
    
 }

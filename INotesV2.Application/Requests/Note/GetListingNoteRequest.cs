@@ -9,10 +9,14 @@ namespace INotesV2.Application.Requests.Note
 {
     public class GetListingNoteRequest
     {
-        public DateTime? Cursor { get; init; }
-        public int PageSize { get; init; } = 20;
+        public DateTime? Cursor { get; set; }
+        public int PageSize { get; set; } = 20;
 
-        public GetListingNoteQuery GetListingNoteQuery(Guid user_id) => new(user_id, Cursor, PageSize);
-       
+        public GetListingNoteQuery GetListingNoteQuery(Guid userId) => new()
+        {
+            UserId = userId,
+            Cursor = Cursor,
+            PageSize = PageSize
+        };
     }
 }

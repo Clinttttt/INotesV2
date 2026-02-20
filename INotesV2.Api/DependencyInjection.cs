@@ -11,6 +11,7 @@ namespace INotesV2.Api
 
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddEndpointsApiExplorer(); 
 
             services.AddCors(options =>
             {
@@ -30,7 +31,8 @@ namespace INotesV2.Api
                     Description = "Please enter a valid token",
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
